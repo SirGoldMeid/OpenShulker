@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.ShulkerBox;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,11 +24,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.logging.Level;
+
 public class Main extends JavaPlugin implements Listener {
     private BukkitTask timeTask = null;
+    private int maxSlots;
+    private String permission;
 
     @Override
     public void onEnable() {
+        loadConfigValues();
         Bukkit.getPluginManager().registerEvents(this, this);
         this.timeTask = new BukkitRunnable() {
             @Override
@@ -44,6 +50,13 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
 
+    private void loadConfigValues() {
+        saveDefaultConfig();
+        FileConfiguration config = getConfig();
+        maxSlots = config.getInt("max_slots", 27);
+        permission = config.getString("permission", "openshulker.slot");
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void GameClick(PlayerInteractEvent e) {
         if (e.getHand() == EquipmentSlot.HAND && !e.getPlayer().isSneaking()) {
@@ -51,10 +64,13 @@ public class Main extends JavaPlugin implements Listener {
             if (isShulkerBox(itemInHand) && e.getPlayer().hasPermission("openshulker.use")) {
                 e.setCancelled(true);
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    ShulkerBox shulker = (ShulkerBox) ((BlockStateMeta) itemInHand.getItemMeta()).getBlockState();
-                    Inventory shulkerInventory = Bukkit.createInventory(null, 27, "Box");
-                    shulkerInventory.setContents(shulker.getInventory().getContents());
-                    e.getPlayer().openInventory(shulkerInventory);
+                    BlockState blockState = ((BlockStateMeta) itemInHand.getItemMeta()).getBlockState();
+                    if (blockState instanceof ShulkerBox) {
+                        ShulkerBox shulker = (ShulkerBox) blockState;
+                        Inventory shulkerInventory = Bukkit.createInventory(null, maxSlots, "Box");
+                        shulkerInventory.setContents(shulker.getInventory().getContents());
+                        e.getPlayer().openInventory(shulkerInventory);
+                    }
                 }
             }
         }
