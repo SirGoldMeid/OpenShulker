@@ -1,0 +1,5 @@
+name: OpenSkulker
+version: '${project.version}'
+main: mrgoldmeid.openshulker.Main
+api-version: '1.19'
+
