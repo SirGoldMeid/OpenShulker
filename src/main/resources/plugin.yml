@@ -2,3 +2,16 @@ name: OpenSkulker2
 version: '${project.version}'
 main: mrgoldmeid.openshulker.Main
 api-version: '1.19'
+author: TuNombre
+description: Plugin para abrir Shulker Boxes con configuración de número máximo de slots y permisos.
+commands:
+  openshulker:
+    description: Comando principal del plugin.
+    usage: /openshulker
+permissions:
+  openshulker.use:
+    description: Permite a los jugadores abrir Shulker Boxes con el número máximo de slots.
+    default: true
+  openshulker.command:
+    description: Permite a los jugadores ejecutar comandos relacionados con las Shulker Boxes.
+    default: op

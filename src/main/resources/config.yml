@@ -1,2 +1,10 @@
+# Configuración para el plugin OpenShulker
+
+# Número máximo de slots para las Shulker Boxes
 max_slots: 27
-permission: openshulker.slot.<slots>
+
+# Permiso requerido para abrir Shulker Boxes con el número máximo de slots
+permiso_abrir_shulker: openshulker.use
+
+# Permiso requerido para ejecutar el comando relacionado con Shulker Boxes
+permiso_ejecutar_comando: openshulker.command
